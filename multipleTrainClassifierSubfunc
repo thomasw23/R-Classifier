@@ -37,7 +37,7 @@ subsetComparison <- function(data_set, comp) {
 #'This function is called by \code{\link{createClassifier}} or 
 #'\code{\link{scanClassifierRange}}. It is a wrapper for calling 
 #'\code{\link[mRMRe]{mRMR.data}} and \code{\link[mRMRe]{mRMR.ensemble}}  
-#'@param data_subset data frame of discretized RMA values where samples are columns and 
+#'@param data_subset data frame of RMA values where samples are columns and 
 #'probesets as rows for the subset of training set samples in the specified comparison.
 #'@param feat_count integer that specifies the feature set size to be tested. 
 #'@inheritParams createClassifier 
