@@ -14,8 +14,6 @@
 #'(default: 1)
 #'@param svm_gamma numermic value (or "def") representingthe gamma parameter when training 
 #'an svm model (default: "def") 
-#'@param dv logical value stating whether the RMA values in the data_set parameter
-#'are discretized (default: FALSE).
 #'@param type character of value "PAX" or "BX" specifying the type of samples to be
 #'tested (default: PAX).
 #'@return object of class txClassifier
@@ -25,11 +23,11 @@
 #'    data_file=system.file("extdata","All_data_272_samples_normalized.csv", 
 #'    package="diagnoseTxSC"), sample_labels=getLabels(system.file("extdata", 
 #'    "pheno_combined_272_samples.txt", package="diagnoseTxSC"), id=2), exp_thresh=3, 
-#'    min=1, save_disc_params=TRUE) , svm_cost=1, svm_gamma=0.05, dv=FALSE, type="PAX")
+#'    min=1, save_disc_params=TRUE) , svm_cost=1, svm_gamma=0.05, type="PAX")
 #'}
 
 
-txClassifier <- function(classes, data_set, svm_cost=1, svm_gamma="def", dv=FALSE, type="PAX")
+txClassifier <- function(classes, data_set, svm_cost=1, svm_gamma="def", type="PAX")
 {
   if(length(classes)!= 2) stop("Exactly 2 classes needed for classifier!")
   if(colnames(data_set)[1] != "pheno" | sum(length(unique(data_set[,1]))) != 2) {
@@ -60,7 +58,6 @@ txClassifier <- function(classes, data_set, svm_cost=1, svm_gamma="def", dv=FALS
     type=type,
     classes=classes,
     data=data_set,
-    disc=dv,
     probes=colnames(data_set)[-1], 
     svm.model=model,
     cost=svm_cost,
