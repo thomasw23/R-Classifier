@@ -6,7 +6,7 @@
 #'
 #'This function is called by \code{\link{trainClassifier}} and is a wrapper for calling
 #'\code{\link{subsetComparison}} prior to a 'typeK' based decision. If 'typeK' equals 
-#'"range", then \code{\link{scanClassifierRangeK}} is called and produces classifier
+#'"range", then \code{\link{scanClassifierRange}} is called and produces classifier
 #'accuracies for a specified range. Otherwise \code{\link{testForExistingClassifier}}
 #'and \code{\link{selectFeaturesMRMR}} are called to create the classifier based on a
 #'specified feature set size.
@@ -46,7 +46,7 @@ createClassifier <- function(data, comp_type, typeK, range_pars, remove_overlaps
   classifierargs <- c("classifier_name_base", "classifier_name", "dv")
   
   if (typeK == "range") {
-    createClassOut <- do.call(scanClassifierRangeK, c(list(data_subset=data_subset, range_pars=range_pars, type=type, 
+    createClassOut <- do.call(scanClassifierRange, c(list(data_subset=data_subset, range_pars=range_pars, type=type, 
                                                            comp_type=comp_type), dots[names(dots) %in% c("dv", svmargs)]))
   } else {
     class_created <- do.call(testForExistingClassifier, c(list(type=type), 
