@@ -1,6 +1,6 @@
 #'Manage training and creation of individual classifiers
 #'
-#'\code{passDataToCreateClassifier} returns a list of 3 elements: 1) list of classifier
+#'\code{createClassifier} returns a list of 3 elements: 1) list of classifier
 #'probeset ids; 2) numeric vector of classifier accuracies: 3) list of classifier 
 #'probesets discretized training data. 
 #'
@@ -34,7 +34,7 @@
 #'func_output_2 <- passDataToCreateClassifier(data, 2, "set", c("full", 100), 1)
 #'} 
 
-passDataToCreateClassifier <- function(data, comp_type, typeK, range_pars, remove_overlaps=TRUE, 
+createClassifier <- function(data, comp_type, typeK, range_pars, remove_overlaps=TRUE, 
                                        type, overlap_class_1="", overlap_class_2="", ...) {
   dots <- list(...)
   comp_type_label <- paste0(comp_type[1], "v", comp_type[2])
@@ -93,5 +93,4 @@ passDataToCreateClassifier <- function(data, comp_type, typeK, range_pars, remov
   }
   
   return(createClassOut)
-  #if (plot_QC == TRUE) plotQC(createClassOut, comp_type)
 }
