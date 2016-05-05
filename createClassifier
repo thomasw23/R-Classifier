@@ -4,9 +4,9 @@
 #'probeset ids; 2) numeric vector of classifier accuracies: 3) list of classifier 
 #'probesets discretized training data. 
 #'
-#'This function is called by \code{\link{trainClassifier}} and is a wrapper for calling
-#'\code{\link{subsetComparison}} prior to a 'typeK' based decision. If 'typeK' equals 
-#'"range", then \code{\link{scanClassifierRange}} is called and produces classifier
+#'This function is a wrapper for calling \code{\link{subsetComparison}} prior to a
+#''typeK' based decision. If 'typeK' equals "range", then 
+#'\code{\link{scanClassifierRange}} is called and produces classifier
 #'accuracies for a specified range. Otherwise \code{\link{testForExistingClassifier}}
 #'and \code{\link{selectFeaturesMRMR}} are called to create the classifier based on a
 #'specified feature set size.
