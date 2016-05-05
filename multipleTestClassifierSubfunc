@@ -5,7 +5,7 @@
 #'
 #'This function is called to take individual classifier results and return 
 #'an overall result for each sample tested. This function calls 
-#'\code{\link{determineDiagnosis}}.
+#'\code{\link{determineFinalClass}}.
 #'@param calls list of 3 elements containing individual classifier results.
 #'@return data frame
 #'@examples
@@ -21,7 +21,7 @@ reportClassifierCalls <- function(calls) {
     } else {
       l <- sapply(1:length(calls), function(x2) calls[[x2]][x,1])
       names(l) <- names(calls)
-      y <- determineDiagnosis(l)
+      y <- determineFinalClass(l)
       z <- c(y, round(calls[[1]][x,2], digits=2), round(calls[[2]][x,2], digits=2))
     }
     return(z)
@@ -38,14 +38,13 @@ reportClassifierCalls <- function(calls) {
   ## Output - finalCalls(data frame): 1 - id; 2 - diagnosis ; 3 - score; 4 - test 
 }
 
-#'Determine Diagnosis based on the Classifier Results 
+#'Determine Final Class based on the Classifier Results 
 #'
-#'\code{determineDiagnosis} returns a 2-element vector: 1)classification; 
+#'\code{determineFinalClass} returns a 2-element vector: 1)classification; 
 #'2) classification groups.
 #'
 #'This function is called by \code{\link{reportClassifierCalls}} to perform the logic that 
-#'determines the diagnosis of a test sample based on the results from each of the 
-#'three classifiers.
+#'determines the overall class of a test sample based on the results from multiple classifiers.
 #'@param g character vector of 3-elements with the output from each of the classifiers.
 #'@return vector
 #'@examples 
@@ -54,9 +53,9 @@ reportClassifierCalls <- function(calls) {
 #'          B=c(AvC="C", BvC="B", BvA="B"),
 #'          A2=c(AvC="A", BvC="B", BvA="A"),
 #'          B2=c(AvC="A", BvC="B", BvA="B"))
-#'lapply(g, determineDiagnosis)
+#'lapply(g, determineFinalClass)
 
-determineDiagnosis <- function(g) {
+determineFinalClass <- function(g) {
   grps <- sapply(names(g), function(x) strsplit(x, "v"))    
   if (g[2] == grps[[2]][2]) {
     if(g[1] == grps[[1]][2]) {
