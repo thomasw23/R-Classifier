@@ -1,0 +1,94 @@
+#'Run Classification on Test Samples with Known Phenotype 
+#'
+#'#'\code{testClassification} returns a list of vectors of 4 elements: 1) sample IDs; 
+#'2) classification; 3) score; 4) actual classification. 
+#'
+#'This function is a wrapper for calling \code{\link{loadClassifier}} and outputs 
+#'an extra column to calculate accuracy.
+#'@param file_prefix character specificying the name of the file (with or without 
+#'".csv") to be loaded for classification. 
+#'@param type character of value "PAX" or "BX" specifying the type of samples to be
+#'tested (default: PAX). 
+#'@param id_file character specifying a file that contains additional identifying
+#' information about the test samples (default: NULL). 
+#'@param pheno_col numeric specifying the column in 'id_file' with known sample 
+#'phenotypes (default: 1).
+#'@param id_col numeric specifying the column in 'id_file' with sample ids (default: 2).
+#'@param output_file_prefix character specifying the beginning of the output filename
+#'which will be added to the time and date stamp and ".csv" (default: NULL).
+#'@param calc_ts_overall_accuracy logical specifying whether to run leave-one-out cross-
+#'validation on the samples being tested (default: FALSE).
+#'@param ... additional arguments include: "col", "head", "id", "data_start_col", 
+#'"probeID_col", "classifier_name", classifier_name_base", "svm_cost", "svm_gamma" 
+#'@return list
+#'@examples
+#'\dontrun{ 
+#'testClassification(file_prefix="", calc_ts_overall_accuracy=TRUE)
+#'}
+
+testDiagnosePatient <- function(file_prefix, type="PAX", id_file=NULL, pheno_col=1, id_col=2,  
+                                output_file_prefix=NULL, calc_ts_overall_accuracy = FALSE, ... ) {
+  dots <- list(...)
+  if (!is.null(id_file)) {
+    message(paste("id filename: ", id_file, sep=""))}
+    labels <- do.call(getLabels, list(id_file, col=pheno_col, id=id_col)) 
+  } else if (calc_ts_overall_accuracy) {
+    stop("Need to specify 'id_file' to use this QC function!")
+  } else {
+    if(!grepl(".csv", file_prefix)) {
+      file_prefix <- paste0(file_prefix, ".csv")
+    }
+
+    if(file.exists(file_prefix)) {
+      if("probeID_col" %in% names(dots)){
+        pidcol <- dots[["probeID_col"]]
+      } else {
+        pidcol <- c(1)
+      }
+      filedata <- read.csv(file_prefix, header=TRUE, row.names=pidcol, nrows=5)
+      labels  <- gsub(".CEL|.cel", "", colnames(filedata))
+      names(labels) <- labels
+    } else {
+      stop(paste("Cannot find RMA csv output file: ", file_prefix, ". Check 'file_prefix' option.", sep=""))
+    }
+  }  
+
+  
+  func2args <- c("data_start_col", "probeID_col")
+  core_data <- do.call(processTestData, c(list(data_file=file_prefix, sample_labels=names(labels)),
+                                                 dots[names(dots) %in% func2args]))
+  
+  svmargs <- c("svm_cost", "svm_gamma")
+  func3args <- c("classifier_name", "classifier_name_base")
+  if(calc_ts_overall_accuracy) {
+  
+    message("Performing Leave-one-out Cross Validation on Samples!")
+    output <- do.call(loadClassifier, c(list(obj=structure(list(), class="overall"), data=core_data,
+                                             type=type), dots[names(dots) %in% c(func3args, svmargs)]))
+    output2 <- cbind(output[[1]], labels[output[[2]]]) 
+  
+  } else {
+  
+    classOutput <- do.call(loadClassifier, c(list(obj=structure(list(), class="single"), data=core_data, 
+                                                  type=type), dots[names(dots) %in% c(func3args, svmargs)]))
+    output <- reportClassifierCalls(classOutput)
+    output2 <- cbind(names(labels), output, labels)
+  
+  }
+
+  colnames(output2) <- c("sample", "classfication", 
+                          colnames(output2)[grep("score", colnames(output2))],
+                          "actual_classification")
+  train_acc <- 100*(sum(output2$classification == output2$actual_classification)/dim(output2)[1])
+  message(sprintf("After locking classifier, new overall accuracy: %s percent", train_acc))
+  
+  if(!is.null(output_file_prefix)) {
+    timestamp <- paste(unlist(strsplit(as.character(Sys.time()), split = " "))[1],
+                       paste(unlist(strsplit(unlist(strsplit(as.character(Sys.time()), split = " "))[2],
+                                             split=":")),collapse="-"), sep="_")
+    outfile <- sprintf("%s_%s.txt", output_file_prefix, timestamp)
+    write.table(output2, file=outfile, sep="\t", quote=FALSE, row.names=FALSE)
+  }
+    
+  return(output2) 
+}
