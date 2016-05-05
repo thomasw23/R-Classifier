@@ -12,8 +12,8 @@
 #'specified feature set size.
 #'@param data data frame of discretized RMA values for training set with samples as
 #'columns and probesets as rows
-#'@param comp_type integer of value 1, 2, 3, 4, 5, or 6 or a character vector of 2
-#' elements that specifies the groups of samples to keep in the data frame (default: 4).
+#'@param comp_type character vector of 2 elements that specifies the groups of samples
+#'to keep in the data frame (default: 4).
 #'@param typeK character that specifies whether to test a range of feature set parameters
 #'("range") or lock the classifier based on a specified feature set size ("set").
 #'@param range_pars vector specifying feature set size parameters specific to type of 
@@ -30,8 +30,8 @@
 #'@return list
 #'@examples
 #'\dontrun{
-#'func_output_1 <- passDataToCreateClassifier(data, 1, "range", c(250, 90, 110), 1)
-#'func_output_2 <- passDataToCreateClassifier(data, 2, "set", c("full", 100), 1)
+#'func_output_1 <- passDataToCreateClassifier(data, c("C","A"), "range", c(250, 90, 110))
+#'func_output_2 <- passDataToCreateClassifier(data, c("C","A"), "set", c("full", 100))
 #'} 
 
 createClassifier <- function(data, comp_type, typeK, range_pars, remove_overlaps=TRUE, 
@@ -85,7 +85,7 @@ createClassifier <- function(data, comp_type, typeK, range_pars, remove_overlaps
     assign(names(class_created), temp_class, envir = globalenv())
     save(list=c(names(class_created)[1]), file=paste0(names(class_created)[1], ".rda"))   
     
-    # Report the median LOOCV accuracy of the sc solutions
+    # Report the median LOOCV accuracy 
     cvacc <-  cv
     message(paste("Leave One Out Cross Validation Accuracy for ", range_pars[2], 
                   " features: ", round(cvacc, 3), sep=""))
