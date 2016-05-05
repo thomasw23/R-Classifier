@@ -19,11 +19,8 @@
 #'@return object of class txClassifier
 #'@examples 
 #'\dontrun{
-#'txClassifier <- txClassifier(classes=c("notTX", "TX"), data_set=processData(
-#'    data_file=system.file("extdata","All_data_272_samples_normalized.csv", 
-#'    package="diagnoseTxSC"), sample_labels=getLabels(system.file("extdata", 
-#'    "pheno_combined_272_samples.txt", package="diagnoseTxSC"), id=2), exp_thresh=3, 
-#'    min=1, save_disc_params=TRUE) , svm_cost=1, svm_gamma=0.05, type="PAX")
+#'txClassifier <- txClassifier(classes=c("notTX", "TX"), data_set="", sample_labels="", 
+#'                              svm_cost=1, svm_gamma=0.05, type="PAX")
 #'}
 
 
