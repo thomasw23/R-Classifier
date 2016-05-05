@@ -55,7 +55,7 @@ testDiagnosePatient <- function(file_prefix, type="PAX", id_file=NULL, pheno_col
 
   
   func2args <- c("data_start_col", "probeID_col")
-  core_data <- do.call(processTestData, c(list(data_file=file_prefix, sample_labels=names(labels)),
+  core_data <- do.call(subsetTestData, c(list(data_file=file_prefix, sample_labels=names(labels)),
                                                  dots[names(dots) %in% func2args]))
   
   svmargs <- c("svm_cost", "svm_gamma")
