@@ -63,13 +63,13 @@ testDiagnosePatient <- function(file_prefix, type="PAX", id_file=NULL, pheno_col
   if(calc_ts_overall_accuracy) {
   
     message("Performing Leave-one-out Cross Validation on Samples!")
-    output <- do.call(loadClassifier, c(list(obj=structure(list(), class="overall"), data=core_data,
+    output <- do.call(loadClassifier, c(list(obj=structure(list(), class="yesCV"), data=core_data,
                                              type=type), dots[names(dots) %in% c(func3args, svmargs)]))
     output2 <- cbind(output[[1]], labels[output[[2]]]) 
   
   } else {
   
-    classOutput <- do.call(loadClassifier, c(list(obj=structure(list(), class="single"), data=core_data, 
+    classOutput <- do.call(loadClassifier, c(list(obj=structure(list(), class="noCV"), data=core_data, 
                                                   type=type), dots[names(dots) %in% c(func3args, svmargs)]))
     output <- reportClassifierCalls(classOutput)
     output2 <- cbind(names(labels), output, labels)
