@@ -35,8 +35,8 @@ crossValidateClassifier.default <- function(df, num_iter, ..., svm_cost=1, svm_g
   r <- nrow(df)
   s <- sample(1:r, num_iter, replace=TRUE)
   sm <- sum(sapply(s, function(x) {
-    pfit <- predict(e1071::svm(pheno ~ ., data=df[-x,], cost=svm_cost, gamma=svm_gamma), 
-                    newdata=df[x,])
+    pfit <- e1071:::predict.svm(e1071::svm(pheno ~ ., data=df[-x,], 
+                                cost=svm_cost, gamma=svm_gamma),newdata=df[x,])
     ifelse(df$pheno[x] == as.character(pfit), 1,0)
   }	))
   acc <- sm/num_iter
@@ -68,8 +68,8 @@ crossValidateClassifier.character <- function(df, num_iter, ..., svm_cost=1, svm
   out <- lapply(list(df), function(x) {
     s <- sample(1:nrow(x), nrow(x), replace=FALSE)
     sm <- sum(sapply(s, function(y) {
-      pfit <- predict(e1071::svm(pheno ~ ., data=x[-y,], cost=svm_cost, gamma=svm_gamma), 
-                      newdata=x[y,]) 
+      pfit <- e1071:::predict.svm(e1071::svm(pheno ~ ., data=x[-y,], 
+                                  cost=svm_cost, gamma=svm_gamma), newdata=x[y,]) 
       ifelse(x$pheno[y] == as.character(pfit), 1, 0)
     } ))
     sm/nrow(x)
