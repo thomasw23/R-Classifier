@@ -8,8 +8,8 @@
 #'
 #'This function is called to prepare properly formatted test data for classification. After loading the 
 #'required dataset (txClassifierPAX), \code{\link{testClassifier}}
-#'are called. This function is also called by \code{\link{trainClassifier}} and 
-#'\code{\link{testClassification}} to perform internal cross-validation on the classifier.
+#'are called. This function is also called by \code{\link{testClassification}} to perform internal
+#'cross-validation on the classifier.
 #'@param obj object of class "overall" or "single" which determines whether to perform
 #'a leave-one-out cross-validation on the training data. 
 #'@param data data frame of sample data for testing.
@@ -68,7 +68,7 @@ loadClassifier.yesCV <- function(obj, ..., data, type, svm_cost=1, svm_gamma="de
 #'Apply Trained and Locked SVM Classifier on New Samples  
 #'
 #'This function takes a data frame containing probe values for
-#'all samples to test and predicts the phenotype using the trained svm classifier. 
+#'all samples to test and predicts the class using the trained svm classifier. 
 #'In addition the score, on a scale from 0 to 100, is also reported.
 #'@rdname loadClassifier
 
