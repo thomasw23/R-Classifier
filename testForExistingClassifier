@@ -7,7 +7,7 @@
 #'
 #'This function checks for the existence of a loaded list of classifier objects. If no object is
 #' loaded, then the 'txClassifierPAX' dataset from the diagnoseTx package 
-#'is loaded. Next, the presence of classifier probesets in each of the three slots 
+#'is loaded. Next, the presence of classifier probesets in each of the slots 
 #'in the list is tested. To test new samples, all classifiers must be present.
 #'@param classifier_name_base character specifying beginning of the name of the data file 
 #'containing the feature set for each classifier. This value will be appended with the type
