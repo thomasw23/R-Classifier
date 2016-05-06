@@ -1,4 +1,4 @@
-#'Prepare Test Samples for Diagnosis by Trained Classifier 
+#'Prepare Test Samples for Classification by Trained Classifier 
 #'
 #'\code{\link{loadClassifier}} returns a list of the same length as the loaded classifier. If no cross-
 #'validation is performed, each element is a data frame of the individual classifier's results 
@@ -8,9 +8,9 @@
 #'
 #'This function is called to prepare properly formatted test data for classification. After loading the 
 #'required dataset (txClassifierPAX), \code{\link{testClassifier}}
-#'are called. This function is also called by \code{\link{testClassification}} to perform internal
+#'are called. This function is called by \code{\link{testClassification}} to perform internal
 #'cross-validation on the classifier.
-#'@param obj object of class "overall" or "single" which determines whether to perform
+#'@param obj object of class "yesCV" or "noCV" which determines whether to perform
 #'a leave-one-out cross-validation on the training data. 
 #'@param data data frame of sample data for testing.
 #'@param svm_cost numeric value specifying the cost for the svm model (default: 1)
@@ -72,7 +72,7 @@ loadClassifier.yesCV <- function(obj, ..., data, type, svm_cost=1, svm_gamma="de
 #'In addition the score, on a scale from 0 to 100, is also reported.
 #'@rdname loadClassifier
 
-loadClassifier.noCV <- function(obj, ..., data, type, dv=TRUE, svm_cost=1, svm_gamma="def") {
+loadClassifier.noCV <- function(obj, ..., data, type, svm_cost=1, svm_gamma="def") {
   dots <- list(...)
   class_created <- NextMethod()
   class_file <- names(class_created)[1]
