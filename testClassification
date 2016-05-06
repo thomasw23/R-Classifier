@@ -19,14 +19,14 @@
 #'@param calc_ts_overall_accuracy logical specifying whether to run leave-one-out cross-
 #'validation on the samples being tested (default: FALSE).
 #'@param ... additional arguments include: "col", "head", "id", "data_start_col", 
-#'"probeID_col", "classifier_name", classifier_name_base", "svm_cost", "svm_gamma" 
+#'"probeID_col", "classifier_name", "classifier_name_base", "svm_cost", "svm_gamma" 
 #'@return list
 #'@examples
 #'\dontrun{ 
 #'testClassification(file_prefix="", calc_ts_overall_accuracy=TRUE)
 #'}
 
-testDiagnosePatient <- function(file_prefix, type="PAX", id_file=NULL, pheno_col=1, id_col=2,  
+testClassification <- function(file_prefix, type="PAX", id_file=NULL, pheno_col=1, id_col=2,  
                                 output_file_prefix=NULL, calc_ts_overall_accuracy = FALSE, ... ) {
   dots <- list(...)
   if (!is.null(id_file)) {
@@ -47,17 +47,12 @@ testDiagnosePatient <- function(file_prefix, type="PAX", id_file=NULL, pheno_col
       }
       filedata <- read.csv(file_prefix, header=TRUE, row.names=pidcol, nrows=5)
       labels  <- gsub(".CEL|.cel", "", colnames(filedata))
-      names(labels) <- labels
+      core_data <- cbind(pheno=labels, read.csv(file_prefix, header=TRUE, row.names=pidcol))
     } else {
       stop(paste("Cannot find RMA csv output file: ", file_prefix, ". Check 'file_prefix' option.", sep=""))
     }
   }  
 
-  
-  func2args <- c("data_start_col", "probeID_col")
-  core_data <- do.call(subsetTestData, c(list(data_file=file_prefix, sample_labels=names(labels)),
-                                                 dots[names(dots) %in% func2args]))
-  
   svmargs <- c("svm_cost", "svm_gamma")
   func3args <- c("classifier_name", "classifier_name_base")
   if(calc_ts_overall_accuracy) {
