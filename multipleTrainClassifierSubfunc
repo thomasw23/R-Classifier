@@ -1,6 +1,6 @@
 #'Subset Training Set Data by Classifier Type
 #'
-#'\code{subsetClassfier} returns a data frame containing only rows with phenotypes
+#'\code{subsetComparison} returns a data frame containing only rows with phenotypes
 #'corresponding to the specified classifier.
 #'
 #'This function takes a training set data frame and removes all rows (samples) that 
