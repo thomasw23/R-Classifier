@@ -32,10 +32,7 @@ testClassifier.default <- function(obj, train_data_name, data, type, dv, sub_nam
                                    svm_cost, svm_gamma, ..., train_data, a=0, b=100) {
   fc <- unlist(strsplit(train_data_name, split="v"))[1]
   dots <- list(...)
-  discretize_args <- c("discretize_name_base", "discretize_name") 
-  disc_data <- do.call(filterTestData, c(list(d=data, disc_feat=colnames(train_data)[-1], 
-                                                  data_name=train_data_name, type=type, dv=dv), 
-                                             dots[names(dots) %in% discretize_args]))
+  disc_data <- do.call(subsetTestData, list(d=data, disc_feat=colnames(train_data)[-1]))
   if(svm_gamma == "def") {svm_gamma <- 1/ncol(train_data[,-1])}  
   model <- e1071::svm(pheno ~ .,data=train_data[order(train_data$pheno, decreasing=TRUE),], 
                       probability=TRUE, cost=svm_cost, gamma=svm_gamma)
@@ -63,10 +60,7 @@ testClassifier.txClassifier <- function(obj, train_data_name, data, type, dv, su
   
   if(sub_name == "") {
     dots <- list(...)
-    discretize_args <- c("discretize_name_base", "discretize_name") 
-    disc_data <- do.call(filterTestData, c(list(d=data, disc_feat=obj$probes, 
-                                                    data_name=train_data_name, type=type, dv=dv), 
-                                               dots[names(dots) %in% discretize_args]))
+    disc_data <- do.call(filterTestData, list(d=data, disc_feat=obj$probes)
     svmcalls <- e1071:::predict.svm(obj$svm.model, new=disc_data, decision.values=TRUE)  
     call_score <- attr(svmcalls, "decision.values")[,1]
     new_call_score <- sapply(call_score, function(x) {          
