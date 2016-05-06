@@ -21,14 +21,14 @@
 #'testClassifier()
 #'}
 
-testClassifier <- function(obj, train_data_name, data, type, dv, sub_name="",
+testClassifier <- function(obj, train_data_name, data, type, sub_name="",
                            svm_cost, svm_gamma, ..., train_data, a=0, b=100) {
   UseMethod("testClassifier")
 }
 
 #'@rdname testClassifier
 
-testClassifier.default <- function(obj, train_data_name, data, type, dv, sub_name="", 
+testClassifier.default <- function(obj, train_data_name, data, type, sub_name="", 
                                    svm_cost, svm_gamma, ..., train_data, a=0, b=100) {
   fc <- unlist(strsplit(train_data_name, split="v"))[1]
   dots <- list(...)
@@ -55,12 +55,12 @@ testClassifier.default <- function(obj, train_data_name, data, type, dv, sub_nam
 
 #'@rdname testClassifier
 
-testClassifier.txClassifier <- function(obj, train_data_name, data, type, dv, sub_name="", 
+testClassifier.txClassifier <- function(obj, train_data_name, data, type, sub_name="", 
                                         svm_cost, svm_gamma, ..., train_data, a=0, b=100) {
   
   if(sub_name == "") {
     dots <- list(...)
-    disc_data <- do.call(filterTestData, list(d=data, disc_feat=obj$probes)
+    disc_data <- do.call(subsetTestData, list(d=data, disc_feat=obj$probes)
     svmcalls <- e1071:::predict.svm(obj$svm.model, new=disc_data, decision.values=TRUE)  
     call_score <- attr(svmcalls, "decision.values")[,1]
     new_call_score <- sapply(call_score, function(x) {          
@@ -80,7 +80,7 @@ testClassifier.txClassifier <- function(obj, train_data_name, data, type, dv, su
 
 #'@rdname testClassifier
 
-testClassifier.data.frame <- function(obj, train_data_name, data, type, dv, sub_name="", 
+testClassifier.data.frame <- function(obj, train_data_name, data, type, sub_name="", 
                                       svm_cost, svm_gamma, ..., train_data, a=0, b=100) {
   train_data <- train_data <- obj[!rownames(obj) %in% sub_name,]
   NextMethod("testClassifier", train_data=train_data)
